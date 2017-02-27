@@ -1,0 +1,68 @@
+# Implementing Iterators
+
+* A ruby iterator is simply a method that can invoke a block of code.
+
+```ruby
+
+def two_times
+  yield
+  yield
+end
+two_times { puts "Hello" }
+
+produces:
+Hello
+Hello
+```
+
+* We can pass parameters to the block and receive values from them.
+
+```ruby
+
+def fib_up_to(max)
+  i1, i2 = 1, 1
+  while i1 <= max
+    yield i1
+    i1, i2 = i2, i1 + i2        
+  end
+end
+
+fib_up_to(1000) {|f| print f, " " }
+
+produces
+1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987
+```
+* Some iterators are common to many types of Ruby collections. Let's look at three: each, collect, and find.
+
+  * each is the simplest iterator - all it does is yield successive elements of its collection.
+
+  ```ruby
+  
+  [1, 3, 5, 7, 9].each {|i| puts i}
+   
+  produces:
+  1
+  3
+  5
+  7
+  9
+  ```
+* A block may also return a value to the method. The value of the last expression evaluated in the block is passed back to the method as the value of the yield.
+
+```ruby
+
+class Array
+ 
+ def find
+   each do |value|
+     return value if yield(value)
+   end
+ end
+
+end
+
+[1, 3, 5, 7, 9].find {|v| v*v > 30} # => 7
+
+```
+* collect also known as map. 
+
